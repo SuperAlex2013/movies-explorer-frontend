@@ -1,0 +1,62 @@
+.profile {
+  min-height: 482px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile__container {
+  width: 410px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile__title {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+  margin: 74px 0 113px;
+}
+
+.profile__logout {
+  margin-top: 14px;
+}
+
+.profile__logout-link {
+  color: #EE3465;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+}
+
+@media screen and (max-width: 1279px) {
+  .profile__title {
+    margin-top: calc(236px + (74 - 236)*((100vw - 768px)/(1280 - 768)));
+    margin-bottom: calc(86px + (113 - 86)*((100vw - 768px)/(1280 - 768)));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile__container {
+    width: calc(260px + (410 - 260)*((100vw - 320px)/(768 - 320)));
+  }
+
+  .profile__title {
+    margin-top: calc(70px + (236 - 70)*((100vw - 320px)/(768 - 320)));
+    margin-bottom: calc(70px + (86 - 70)*((100vw - 320px)/(768 - 320)));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .profile__title {
+    margin: 70px 0 70px;
+  }
+
+  .profile__logout {
+    margin-top: 12px;
+  }
+
+  .profile__logout-link {
+    font-size: 12px;
+  }
+}

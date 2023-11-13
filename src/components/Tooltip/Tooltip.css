@@ -1,0 +1,28 @@
+
+.tooltip {
+  width: 100%;
+  min-height: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  visibility: hidden;
+  margin-bottom: 20px;
+}
+
+/* Visibility modifier for the tooltip */
+.tooltip-visible {
+  visibility: visible;
+}
+
+/* Styling for error text in the tooltip */
+.tooltip-error-text {
+  color: #ff004c;
+  font-size: 11px;
+  text-align: center;
+  margin: 0;
+}
+
+/* Styling for error code in the tooltip */
+.tooltip-error-code {
+  font-weight: 500;
+}
