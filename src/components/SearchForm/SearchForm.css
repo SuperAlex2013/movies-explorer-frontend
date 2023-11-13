@@ -42,9 +42,9 @@
   line-height: 10px;
 }
 
-.search__field:not(:valid) + .search__message {
+/* .search__field:not(:valid) + .search__message {
   visibility: visible;
-}
+} */
 
 .search__submit {
   width: 46px;

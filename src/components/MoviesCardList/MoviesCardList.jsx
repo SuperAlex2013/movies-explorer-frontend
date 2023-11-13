@@ -10,7 +10,7 @@ const MoviesCardList = ({ id, movies, savedMovies }) => {
 
   return (
     <section className="movies-card">
-      <ul className="movies-card__list page__list">
+      <ul className="page__list movies-card__list">
         {renderMovies()}
       </ul>
     </section>

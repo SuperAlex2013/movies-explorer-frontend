@@ -4,15 +4,6 @@ import './SearchForm.css';
 
 function SearchForm() {
   const [searchValue, setSearchValue] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-  const [isTouched, setIsTouched] = useState(false); // New state to track if the input has been modified
-
-  const handleInputChange = (event) => {
-    if (!isTouched) {
-      setIsTouched(true); // Set isTouched to true when the input is changed for the first time
-    }
-    setSearchValue(event.target.value);
-  };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -20,12 +11,8 @@ function SearchForm() {
     console.log(searchValue);
   };
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
+  const handleInputChange = (event) => {
+    setSearchValue(event.target.value);
   };
 
   return (
@@ -39,18 +26,14 @@ function SearchForm() {
               id="search"
               name="search"
               value={searchValue}
-              onChange={handleInputChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
               placeholder="Movie"
               required
               aria-describedby="search-error"
+              onChange={handleInputChange} // Added onChange event handler
             />
-            {isFocused && isTouched && !searchValue && (
-              <span id="search-error" className="search__message">
-                Напишите название фильма
-              </span>
-            )}
+            <span id="search-error" className="search__message">
+              Напишите название фильма
+            </span>
           </label>
           <button type="submit" className="page__button search__submit" aria-label="Search" />
         </div>
