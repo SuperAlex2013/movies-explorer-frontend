@@ -1,0 +1,90 @@
+.movies-card {
+  margin-top: 80px;
+  margin-bottom: 10px;
+}
+
+.movies-card__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  column-gap: 30px;
+  row-gap: 40px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1279px) {
+  .movies-card {
+    margin-bottom: 5px;
+  }
+
+  .movies-card__list {
+    width: calc(708px + (800 - 708)*((100vw - 768px)/(1280 - 768)));
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .movies-card__list {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .movies-card {
+    margin-top: 50px;
+    margin-bottom: 4px;
+  }
+
+  .movies-card__list {
+    row-gap: 30px;
+  }
+}
+
+
+/* Movies Card Section */
+.movies-card {
+  margin-top: 50px; /* Updated for consistency across screen sizes */
+  margin-bottom: 10px;
+}
+
+/* Movies Card List - Main Layout */
+.movies-card__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 40px 30px; /* Combined row-gap and column-gap */
+  margin: 0 auto;
+}
+
+/* Responsive Design Adjustments */
+/* Medium Screens */
+@media screen and (max-width: 1279px) {
+  .movies-card {
+    margin-bottom: 5px;
+  }
+
+  .movies-card__list {
+    width: calc(708px + (800 - 708)*((100vw - 768px)/(1280 - 768))); /* Simplified math expression */
+    justify-content: space-between;
+  }
+}
+
+/* Small Screens */
+@media screen and (max-width: 767px) {
+  .movies-card__list {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Extra Small Screens */
+@media screen and (max-width: 320px) {
+  .movies-card {
+    margin-bottom: 4px;
+  }
+
+  .movies-card__list {
+    gap: 30px 30px; /* Consistent gap for small screens */
+  }
+}

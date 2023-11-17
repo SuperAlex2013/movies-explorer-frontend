@@ -1,0 +1,78 @@
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login__container {
+  width: 396px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login__header {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+  margin: 40px 0;
+}
+
+.login__link {
+  width: 38px;
+  height: 38px;
+  display: block;
+  border-radius: 19px;
+  overflow: hidden;
+}
+
+.login__signup {
+  font-size: 14px;
+  line-height: 17px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.login__signup-text {
+  color: #8b8b8b;
+  margin: 0;
+}
+
+.login__signup-link {
+  color: #4285f4;
+}
+
+@media screen and (max-width: 768px) {
+  .login__container {
+    width: calc(260px + 136 * ((100vw - 320px) / 448));
+    margin-top: 66px;
+  }
+
+  .login__header {
+    margin-top: calc(50px + -10 * ((100vw - 320px) / 448));
+    margin-bottom: calc(80px + -40 * ((100vw - 320px) / 448));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .login {
+    align-items: flex-start;
+  }
+
+  .login__header {
+    margin: 50px 0 80px;
+  }
+
+  .login__container {
+    align-items: center;
+    margin-top: 56px;
+  }
+
+  .login__signup {
+    font-size: 12px;
+    line-height: 15px;
+    margin-top: 14px;
+  }
+}
