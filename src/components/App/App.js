@@ -94,7 +94,7 @@ function App() {
       api
         .getAllInitialData(token)
         .then((data) => {
-          const [userInfo, movies] = data;
+          const {userInfo, movies} = data;
           setCurrentUser(userInfo);
           setSavedMovies(movies.filter((i) => i.owner._id === userInfo._id));
           setMoviesState({

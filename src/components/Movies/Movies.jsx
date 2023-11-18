@@ -100,7 +100,7 @@ function Movies() {
             errorMessage={errorMessage}
           />
           {filteredItems.length > numberOfCard && (
-            <MoreButton onClick={onMoreClick} />
+            <MoreButton handleMoreClick={onMoreClick} />
           )}
         </>
       )}
