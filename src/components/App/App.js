@@ -14,7 +14,7 @@ import Profile from 'components/Profile/Profile';
 import Register from 'components/Register/Register';
 import SavedMovies from 'components/SavedMovies/SavedMovies';
 import PageNotFound from 'components/PageNotFound/PageNotFound';
-import ProtectedRoute from 'hoc/ProtectedRoute';
+import ProtectedRoute from 'utils/ProtectedRoute';
 import api from 'utils/MainApi';
 import {
   onRegister,
