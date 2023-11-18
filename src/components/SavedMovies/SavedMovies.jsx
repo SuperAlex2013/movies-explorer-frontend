@@ -29,11 +29,11 @@ function SavedMovies() {
   }, []); // Empty dependency array to run only on component mount
 
   const toggleShortCheck = (isShortChecked) => {
-    setSavedState({ ...savedState, isShortChecked });
+    setSavedState(s => ({ ...s, isShortChecked: isShortChecked }));
   };
 
   const onSearchSubmit = (value) => {
-    setSavedState({ ...savedState, searchValue: value });
+    setSavedState(s => ({ ...s, searchValue: value }));
   };
 
   const renderSearchForm = () => (
