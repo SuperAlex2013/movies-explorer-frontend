@@ -22,6 +22,7 @@ function SearchForm({
   const handleCheck = (e) => {
     const input = e.target;
     onCheck(input.checked);
+    onSubmit(value);
   };
 
   const handleSubmit = (e) => {
