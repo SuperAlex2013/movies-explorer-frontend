@@ -13,10 +13,24 @@
   font-weight: 500;
   line-height: normal;
   background-color: inherit;
-  border: 1px solid #424242; 
+  border: 1px solid #424242;
   border-radius: 6px;
   margin-top: 50px;
   margin-bottom: 80px;
+}
+
+.more__button:hover {
+  filter: brightness(1.2);
+  cursor: pointer;
+}
+
+.more__button:active {
+  filter: brightness(1.4)
+}
+
+.more__button:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media screen and (max-width: 580px) {
