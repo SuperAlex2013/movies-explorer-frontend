@@ -9,7 +9,7 @@ import Field from 'components/Field/Field';
 function Form({ formType, formValues, onSubmit }) {
   // Use destructuring to extract variables from useContext and useLocation
   const { pathname } = useLocation();
-  const { isLoading, setState } = useContext(AppContext);
+  const { isLoading, state, setState } = useContext(AppContext);
 
   // Destructure form, errors, isDirty, isValid, handleChange, and reset from useForm
   const { form, errors, isDirty, isValid, handleChange, reset } = useForm(

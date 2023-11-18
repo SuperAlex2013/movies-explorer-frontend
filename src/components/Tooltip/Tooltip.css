@@ -1,4 +1,3 @@
-
 .tooltip {
   width: 100%;
   min-height: 28px;
@@ -9,20 +8,24 @@
   margin-bottom: 20px;
 }
 
-/* Visibility modifier for the tooltip */
-.tooltip-visible {
+.tooltip_visible {
   visibility: visible;
 }
 
-/* Styling for error text in the tooltip */
-.tooltip-error-text {
-  color: #ff004c;
+.tooltip__error-status {
+  font-weight: 500;
+}
+
+.tooltip__text {
   font-size: 11px;
   text-align: center;
   margin: 0;
 }
 
-/* Styling for error code in the tooltip */
-.tooltip-error-code {
-  font-weight: 500;
+.tooltip__error-text {
+  color: var(--color-error);
+}
+
+.tooltip__success-text {
+  color: var(--color-light);
 }
