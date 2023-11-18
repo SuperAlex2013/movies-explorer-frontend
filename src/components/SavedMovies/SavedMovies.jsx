@@ -10,6 +10,7 @@ function SavedMovies() {
   const { searchValue, isShortChecked } = savedState;
 
   useEffect(() => {
+    // Set initial state when component mounts
     if (savedMovies.length === 0) {
       setSavedState({
         ...savedState,
@@ -25,7 +26,7 @@ function SavedMovies() {
         errorMessage: '',
       });
     }
-  }, [savedMovies, savedState, setSavedState]);
+  }, []); // Empty dependency array to run only on component mount
 
   const toggleShortCheck = (isShortChecked) => {
     setSavedState({ ...savedState, isShortChecked });

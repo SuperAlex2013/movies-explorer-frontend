@@ -22,8 +22,9 @@ function SearchForm({
   const handleCheck = (e) => {
     const input = e.target;
     onCheck(input.checked);
-    onSubmit(value);
+    onSubmit(value); // Вызов поиска с текущим значением поля ввода
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

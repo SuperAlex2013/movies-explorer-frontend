@@ -49,32 +49,29 @@ function Movies() {
   const { number, limit } = paramRef.current;
   const [numberOfCard, setNumberOfCard] = useState(number);
 
-  useEffect(() => {
-    // Проверяем, есть ли сохраненные данные поиска, и если есть, выполняем поиск
-    if (searchValue) {
-      onSearchSubmit(searchValue);
-    }
-  }, []);
-
   function onMoreClick() {
     setNumberOfCard((state) => state + limit);
   }
 
-  function toggleShortCheck(isShortChecked) {
-    setMoviesState({ ...moviesState, isShortChecked });
-  }
-
-  function onSearchSubmit(value) {
-    setIsFirstSearch(true);
-    setMoviesState({ ...moviesState, searchValue: value });
-    setNumberOfCard(number);
+  function toggleShortCheck() {
+    setMoviesState((prevState) => ({
+      ...prevState,
+      isShortChecked: !prevState.isShortChecked,
+    }));
   }
 
   useEffect(() => {
-    if (searchValue) {
-      onSearchSubmit(searchValue);
-    }
-  }, []);
+    onSearchSubmit(searchValue);
+  }, [isShortChecked, searchValue]);
+
+  function onSearchSubmit(value) {
+    setIsFirstSearch(true);
+    setMoviesState((prevState) => ({
+      ...prevState,
+      searchValue: value,
+    }));
+    setNumberOfCard(number);
+  }
 
   const filteredItems = filter(
     movies,
