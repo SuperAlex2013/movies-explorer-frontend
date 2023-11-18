@@ -1,13 +1,12 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Preloader from 'components/Preloader/Preloader';
 import SearchForm from 'components/SearchForm/SearchForm';
 import MoviesCardList from 'components/MoviesCardList/MoviesCardList';
+import MoreButton from 'components/MoreButton/MoreButton';
 import { AppContext } from 'contexts/AppContext';
 import { filter } from 'utils/filter';
-import MoreButton from 'components/MoreButton/MoreButton'; 
 import './Movies.css';
 
-// Function to render the SearchForm component
 function RenderSearchForm({
   isShortChecked,
   isShortDisabled,
@@ -50,6 +49,13 @@ function Movies() {
   const { number, limit } = paramRef.current;
   const [numberOfCard, setNumberOfCard] = useState(number);
 
+  useEffect(() => {
+    // Проверяем, есть ли сохраненные данные поиска, и если есть, выполняем поиск
+    if (searchValue) {
+      onSearchSubmit(searchValue);
+    }
+  }, []);
+
   function onMoreClick() {
     setNumberOfCard((state) => state + limit);
   }
@@ -64,6 +70,12 @@ function Movies() {
     setNumberOfCard(number);
   }
 
+  useEffect(() => {
+    if (searchValue) {
+      onSearchSubmit(searchValue);
+    }
+  }, []);
+
   const filteredItems = filter(
     movies,
     ['nameRU', 'nameEN'],
@@ -73,7 +85,6 @@ function Movies() {
 
   return (
     <main className="movies">
-      {/* Rendering the SearchForm component using the RenderSearchForm function */}
       {RenderSearchForm({
         isShortChecked,
         isShortDisabled,
