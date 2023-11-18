@@ -1,40 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './FilterCheckbox.css';
 
-function FilterCheckbox() {
-  const [isChecked, setIsChecked] = useState(true);
-
-  const handleCheckboxToggle = () => {
-    setIsChecked(!isChecked);
-  };
-
+function FilterCheckbox({ isDisabled, isChecked, onChange, labelText }) {
   return (
-    <div className="filter-checkbox">
-      <CheckboxInput
-        isChecked={isChecked}
-        onToggle={handleCheckboxToggle}
-      />
-    </div>
-  );
-}
-
-function CheckboxInput({ isChecked, onToggle }) {
-  return (
-    <label className="checkbox">
+    <label className="slider__container" htmlFor="checkbox">
+      {labelText && <span>{labelText}</span>}
       <input
-        className="checkbox__input"
+        className="slider__input"
         type="checkbox"
         id="checkbox"
+        disabled={isDisabled}
         checked={isChecked}
-        onChange={onToggle}
+        onChange={onChange}
       />
-      <Slider />
+      <span className="slider__track" />
     </label>
   );
 }
 
-function Slider() {
-  return <span className="checkbox__slider" />;
-}
+FilterCheckbox.propTypes = {
+  isDisabled: PropTypes.bool,
+  isChecked: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  labelText: PropTypes.string
+};
+
+FilterCheckbox.defaultProps = {
+  isDisabled: false,
+  isChecked: false,
+  labelText: ''
+};
 
 export default FilterCheckbox;

@@ -1,60 +1,59 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './Form.css';
-
 import { useLocation } from 'react-router-dom';
 import { AppContext } from 'contexts/AppContext';
 import Tooltip from 'components/Tooltip/Tooltip';
 import useForm from 'hooks/useForm';
 import Field from 'components/Field/Field';
 
-// Component for rendering individual form fields
-const FormField = ({ formType, form, errors, handleChange, item }) => (
-  <Field
-    key={item.id}
-    formType={formType}
-    value={form[item.id] || ''}
-    error={errors[item.id] || ''}
-    onChange={handleChange}
-    {...item}
-  />
-);
-
-// Component for rendering the submit button
-const SubmitButton = ({ isLoading, isValid, formType, submitText, pathname }) => (
-  <button
-    type="submit"
-    className={`page__button form-submit form-${formType}-submit ${
-      isLoading ? 'form-submit-loading' : ''
-    }`}
-    disabled={!isValid}
-    aria-describedby="description"
-  >
-    {submitText[pathname]}
-  </button>
-);
-
-// Main Form component
 function Form({ formType, formValues, onSubmit }) {
+  // Use destructuring to extract variables from useContext and useLocation
   const { pathname } = useLocation();
-  const { isLoading } = useContext(AppContext);
+  const { isLoading, setState } = useContext(AppContext);
 
-  const { form, errors, isValid, handleChange, handleSubmit, setInitialState } =
-    useForm(onSubmit);
+  // Destructure form, errors, isDirty, isValid, handleChange, and reset from useForm
+  const { form, errors, isDirty, isValid, handleChange, reset } = useForm(
+    formValues
+  );
 
-  // Setting initial form state
+  // Use a more descriptive variable name for isEdit
+  const [isEditing, setEditing] = useState(pathname !== '/profile');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (pathname !== '/profile') return onSubmit(form);
+
+    if (!isEditing) {
+      setState('idle');
+      return setEditing(true);
+    }
+
+    setEditing(false);
+    onSubmit(form);
+  }
+
+  function handleCancel() {
+    setEditing(false);
+  }
+
   useEffect(() => {
-    setInitialState(formValues);
+    if (pathname === '/profile') reset(formValues);
     //eslint-disable-next-line
-  }, [formValues]);
+  }, [formValues, isEditing]);
 
-  // Text for the submit button based on form state
   const submitText = {
     '/signup': isLoading ? 'Регистрация' : 'Зарегистрироваться',
     '/signin': isLoading ? 'Вход' : 'Войти',
-    '/profile': isLoading ? 'Сохранение' : 'Редактировать',
+    '/profile': getSubmitText(),
   };
 
-  // Field configuration
+  function getSubmitText() {
+    if ((isDirty && isEditing) || isEditing) return 'Сохранить';
+    if (isLoading) return 'Сохранение';
+    return 'Редактировать';
+  }
+
   const fields = [
     {
       id: 'name',
@@ -78,50 +77,50 @@ function Form({ formType, formValues, onSubmit }) {
     },
   ];
 
-  // Determine which fields to render based on the form type
-  const fieldsToRender = () => {
-    switch (pathname) {
-      case '/signup':
-        return fields;
-      case '/signin':
-        return fields.slice(1);
-      case '/profile':
-        return fields.slice(0, 2);
-      default:
-        return [];
-    }
-  };
+  const renderField = (item) => (
+    <Field
+      key={item.id}
+      formType={formType}
+      value={form[item.id] || ''}
+      error={errors[item.id] || ''}
+      readOnly={!isEditing}
+      onChange={handleChange}
+      {...item}
+    />
+  );
 
   return (
     <form
       onSubmit={handleSubmit}
-      className={`form-container form-${formType}`}
+      className={`form form_type_${formType}`}
       noValidate
     >
-      <div className="form-fields">
-        {fieldsToRender().map((item) => (
-          <FormField
-            key={item.id}
-            formType={formType}
-            form={form}
-            errors={errors}
-            handleChange={handleChange}
-            item={item}
-          />
-        ))}
+      <div className="form__fields">
+        {pathname === '/signup' && fields.map(renderField)}
+        {pathname === '/signin' && fields.slice(1, 3).map(renderField)}
+        {pathname === '/profile' && fields.slice(0, 2).map(renderField)}
       </div>
-      <Tooltip>
-        <p className="tooltip__error-text" id="description">
-          При регистрации пользователя произошла ошибка.
-        </p>
-      </Tooltip>
-      <SubmitButton
-        isLoading={isLoading}
-        isValid={isValid}
-        formType={formType}
-        submitText={submitText}
-        pathname={pathname}
-      />
+      <Tooltip />
+      <div className="form__bottom">
+        <button
+          type="submit"
+          className={`page__button form__submit form__${formType}-submit ${
+            isLoading ? 'form__submit_is-loading' : ''
+          }`}
+          disabled={!isValid || (!isDirty && isEditing)}
+          aria-describedby="description"
+        >
+          {submitText[pathname]}
+        </button>
+        {pathname === '/profile' && isEditing && (
+          <button
+            className={`page__button form__${formType}-cancel`}
+            onClick={handleCancel}
+          >
+            Отмена
+          </button>
+        )}
+      </div>
     </form>
   );
 }

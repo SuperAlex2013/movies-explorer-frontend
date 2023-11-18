@@ -1,45 +1,89 @@
 import { useState } from 'react';
-import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+
+import FilterCheckbox from 'components/FilterCheckbox/FilterCheckbox';
 import './SearchForm.css';
 
-function SearchForm() {
-  const [searchValue, setSearchValue] = useState('');
+function SearchForm({
+  isChecked,
+  isCheckDisabled,
+  onCheck,
+  searchValue,
+  isSubmitDisabled,
+  onSubmit,
+}) {
+  const [value, setValue] = useState(searchValue || '');
+  const [isRequired, setIsRequired] = useState(false);
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    if (!searchValue.trim()) return;
-    console.log(searchValue);
+  const handleChange = (e) => {
+    const input = e.target;
+    setValue(input.value);
   };
 
-  const handleInputChange = (event) => {
-    setSearchValue(event.target.value);
+  const handleCheck = (e) => {
+    const input = e.target;
+    onCheck(input.checked);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (value === '') return setIsRequired(true);
+    onSubmit(value);
+    setIsRequired(false);
+  };
+
+  const renderSearchInput = () => {
+    return (
+      <label className="search__label">
+        <input
+          className="page__input search__input"
+          type="search"
+          id="search"
+          name="search"
+          value={value || ''}
+          onChange={handleChange}
+          placeholder="Фильм"
+          required={isRequired || false}
+          autoFocus
+          aria-describedby="search-error"
+          aria-invalid="true"
+        />
+        <span id="search-error" className="search__error">
+          Нужно ввести ключевое слово
+        </span>
+      </label>
+    );
+  };
+
+  const renderSubmitButton = () => {
+    return (
+      <button
+        type="submit"
+        className="page__button search__button"
+        disabled={isSubmitDisabled || false}
+      />
+    );
+  };
+
+  const renderFilterCheckbox = () => {
+    return (
+      <FilterCheckbox
+        isChecked={isChecked}
+        isDisabled={isCheckDisabled}
+        onChange={handleCheck}
+      />
+    );
   };
 
   return (
-    <section className="search" aria-label="Search Movies">
-      <form onSubmit={handleFormSubmit} className="search__form" noValidate>
-        <div className="search__container">
-          <label htmlFor="search" className="search__label">
-            <input
-              className="search__field"
-              type="search"
-              id="search"
-              name="search"
-              value={searchValue}
-              placeholder="Movie"
-              required
-              aria-describedby="search-error"
-              onChange={handleInputChange} // Added onChange event handler
-            />
-            <span id="search-error" className="search__message">
-              Напишите название фильма
-            </span>
-          </label>
-          <button type="submit" className="page__button search__submit" aria-label="Search" />
+    <section className="search" aria-label="Поиск фильмов">
+      <form onSubmit={handleSubmit} className="search__form" noValidate>
+        <div className="search__row">
+          {renderSearchInput()}
+          {renderSubmitButton()}
         </div>
-        <div className="search__options">
-          <FilterCheckbox />
-          <p className="search__options-text">Short Films</p>
+        <div className="search__filter">
+          {renderFilterCheckbox()}
+          <p className="search__filter-text">Короткометражки</p>
         </div>
       </form>
     </section>

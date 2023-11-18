@@ -1,74 +1,75 @@
 .search {
-  --color-form: #8b8b8b;
+  --color-form: var(--color-gray);
+
   width: 100%;
+  border-bottom: 1px solid var(--border-color-primary);
   padding-block: 80px 39px;
-  border-bottom: 1px solid #424242;
 }
 
-.search__container {
+.search__row {
   display: flex;
   align-items: center;
-  justify-content: center;
   column-gap: 9px;
+  margin-bottom: 15px;
 }
 
 .search__label {
   flex: 1;
 }
 
-.search__field {
+.search__input {
   width: 100%;
-  padding: 15px 20px;
-  margin-bottom: 3px;
-  color: #fff;
-  background-color: #2f2f2f;
-  border: 1px solid transparent;
-  border-radius: 8px;
+  color: var(--color-form);
   font-size: 14px;
   line-height: 18px;
   font-weight: 400;
+  background-color: var(--bg-color-dark-gray);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 3px;
 }
 
-.search__field:focus {
-  border-color: #4285f4;
+.search__input:focus {
+  border-color: var(--color-blue);
 }
 
-.search__message {
-  display: block;
+.search__error {
   min-height: 10px;
-  visibility: hidden;
-  color: #ee3465;
+  color: var(--color-form-error);
   font-size: 10px;
   line-height: 10px;
+  display: block;
+  visibility: hidden;
 }
 
-/* .search__field:not(:valid) + .search__message {
+.search__input:not(:valid) + .search__error {
   visibility: visible;
-} */
+}
 
-.search__submit {
-  width: 46px;
-  height: 46px;
-  margin-bottom: 14px;
+.search__button {
+  width: 44px;
+  height: 44px;
   background: url(images/search-form_find-btn.svg) no-repeat center;
   border-radius: 6px;
+  margin-bottom: 13px;
 }
 
-.search__options {
+.search__filter {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 15px;
 }
 
-.search__options-text {
-  margin: 0;
+.search__filter-text {
   font-size: 12px;
   line-height: 18px;
+  margin: 0;
 }
 
 @media screen and (max-width: 768px) {
-  .search__container {
+  .search__row {
     margin-bottom: 27px;
   }
 }
@@ -78,15 +79,15 @@
     width: calc(100% - 4px * 2);
   }
 
-  .search__container {
+  .search__row {
     margin-bottom: 33px;
   }
 
-  .search__field {
+  .search__input {
     padding: 12px 13px;
   }
 
-  .search__options-text {
+  .search__filter-text {
     font-size: 11px;
   }
 }

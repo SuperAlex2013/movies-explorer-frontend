@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from 'contexts/AppContext';
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
 import useWindowSize from 'hooks/useWindowSize';
-
-// Component imports
+import useScreenSize from 'hooks/useScreenSize';
+import useLocalStorage from 'hooks/useLocalStorage';
 import Layout from 'components/Layout/Layout';
 import Login from 'components/Login/Login';
 import Landing from 'components/Landing/Landing';
@@ -14,39 +14,187 @@ import Profile from 'components/Profile/Profile';
 import Register from 'components/Register/Register';
 import SavedMovies from 'components/SavedMovies/SavedMovies';
 import PageNotFound from 'components/PageNotFound/PageNotFound';
+import ProtectedRoute from 'hoc/ProtectedRoute';
+import api from 'utils/MainApi';
+import {
+  onRegister,
+  onLogin,
+  onProfileEdit,
+  onSaveMovie,
+  onRemoveMovie,
+  handleMenuClick,
+  onSignOut,
+  fetchMovies,
+} from './AppFuncs';
 
 import './App.css';
 
 function App() {
+  const handleRegister = (data) => onRegister(data, setToken, setLoading, setState, setStatus, handleLogin);
+  const handleLogin = (data) => onLogin(data, setToken, setLoading, setState, setStatus);
+  const handleProfileEdit = (data) => onProfileEdit(data, token, setLoading, setCurrentUser, setState, setStatus);
+  const handleSaveMovie = (data) => onSaveMovie(data, token, setSavedMovies, setLoading);
+  const handleRemoveMovie = (movie) => onRemoveMovie(movie, token, setSavedMovies, setLoading);
+  const handleMenuToggle = () => handleMenuClick(setMenuOpen);
+  const handleSignOut = () => onSignOut(setLoggedIn, setIsFirstSearch, setCurrentUser, setMoviesState, setSavedState, setMovies, setToken, navigate);
+  const handleFetchMovies = () => fetchMovies(setMovies, setIsError, setMoviesState, setLoading, moviesState);
+
   const { width } = useWindowSize();
-  const isLargeDevice = width > 768;
+  const { isLargeDevice, paramRef } = useScreenSize();
+  const [token, setToken] = useLocalStorage('jwt', '');
+  const [currentUser, setCurrentUser] = useState({});
 
-  const [currentUser, setCurrentUser] = useState({ name: '', email: '', password: '' });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [moviesState, setMoviesState] = useLocalStorage('moviesState', {});
+  const [savedState, setSavedState] = useLocalStorage('savedState', {});
 
-  // Toggle handlers
-  const handleLoginToggle = () => setIsLoggedIn(true);
-  const handleLogoutToggle = () => setIsLoggedIn(false);
-  const handleMenuToggle = () => setIsMenuOpen(prevState => !prevState);
-  const handleProfileEdit = newUserData => setCurrentUser(prevState => ({ ...prevState, ...newUserData }));
+  const [isFirstSearch, setIsFirstSearch] = useState(false);
 
-  // Context values
-  const appContextValue = { width, isLargeDevice, isLoggedIn, isMenuOpen, onClickMenu: handleMenuToggle };
-  const currentUserContextValue = { ...currentUser, onLogout: handleLogoutToggle, onProfileEdit: handleProfileEdit };
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const [state, setState] = useState('idle');
+  const [status, setStatus] = useState(null);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    setLoading(true);
+
+    api
+      .getUserInfo(token)
+      .then((data) => {
+        setCurrentUser(data);
+        setLoggedIn(true);
+
+        if (pathname === '/signin' || pathname === '/signup') {
+          navigate('/movies', { replace: true });
+        } else {
+          navigate(pathname);
+        }
+
+        setLoading(false);
+      })
+      .catch(console.error);
+  }, [token]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      setLoading(true);
+
+      api
+        .getAllInitialData(token)
+        .then((data) => {
+          const [user, movies] = data;
+          setCurrentUser(user);
+          setSavedMovies(movies.filter((i) => i.owner === user._id));
+          setMoviesState({
+            ...moviesState,
+            isShortChecked: false,
+            isShortDisabled: false,
+            searchValue: '',
+          });
+        })
+        .catch(console.error)
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [isLoggedIn, token]);
+
+  useEffect(() => {
+    if (isFirstSearch) {
+      handleFetchMovies();
+    }
+  }, [isFirstSearch]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    if (savedMovies.length === 0)
+      return setSavedState({
+        ...savedState,
+        isShortDisabled: true,
+        isSubmitDisabled: true,
+        errorMessage: 'Nothing to see here ^( ͡° ͜ʖ ͡°)^',
+      });
+
+    return setSavedState({
+      ...savedState,
+      isShortDisabled: false,
+      isSubmitDisabled: false,
+      errorMessage: '',
+    });
+  }, [savedMovies]);
 
   return (
-    <AppContext.Provider value={appContextValue}>
-      <CurrentUserContext.Provider value={currentUserContextValue}>
+    <AppContext.Provider
+      value={{
+        width,
+        isLargeDevice,
+        isLoggedIn,
+        isLoading,
+        isError,
+        isMenuOpen,
+        state,
+        status,
+        paramRef,
+        savedMovies,
+        movies,
+        setMovies,
+        moviesState,
+        setMoviesState,
+        savedState,
+        setSavedState,
+        isFirstSearch,
+        setIsFirstSearch,
+        setState,
+        setLoading,
+        onClickMenu: handleMenuToggle,
+        handleSaveMovie,
+        handleRemoveMovie,
+      }}
+    >
+      <CurrentUserContext.Provider value={currentUser}>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Landing />} />
-            <Route path="movies" element={<Movies />} />
-            <Route path="saved-movies" element={<SavedMovies />} />
-            <Route path="profile" element={<Profile />} />
+            <Route
+              path="movies"
+              element={
+                <ProtectedRoute>
+                  <Movies />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="saved-movies"
+              element={
+                <ProtectedRoute>
+                  <SavedMovies />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="profile"
+              element={
+                <ProtectedRoute>
+                  <Profile onSubmit={handleProfileEdit} onLogout={handleSignOut} />
+                </ProtectedRoute>
+              }
+            />
           </Route>
-          <Route path="signup" element={<Register onSubmit={handleLoginToggle} />} />
-          <Route path="signin" element={<Login onSubmit={handleLoginToggle} />} />
+          <Route path="signup" element={<Register onSubmit={handleRegister} />} />
+          <Route path="signin" element={<Login onSubmit={handleLogin} />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </CurrentUserContext.Provider>

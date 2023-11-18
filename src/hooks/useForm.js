@@ -1,38 +1,52 @@
 import { useState } from 'react';
 
-const useForm = (onSubmit) => {
-  // State management for form data, errors, and form validity
-  const [form, setForm] = useState({});
+const useForm = (initialState, onSubmit) => {
+  // State management for form fields, errors, dirty status, and validity
+  const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
-  const [isValid, setIsValid] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [isValid, setIsValid] = useState(true);
 
-  // Handler for form input changes
+  // Function to handle input changes
   const handleChange = (e) => {
-    const { name, value, validationMessage, form } = e.target;
+    const input = e.target;
 
-    // Update errors and form data
-    setErrors(prevErrors => ({ ...prevErrors, [name]: validationMessage }));
-    setForm(prevForm => ({ ...prevForm, [name]: value }));
+    // Update errors object with validation messages
+    setErrors({
+      ...errors,
+      [input.name]: input.validationMessage,
+    });
 
-    // Update form validity
-    setIsValid(form.checkValidity());
+    // Update form state with the input's value
+    setForm({
+      ...form,
+      [input.name]: input.value,
+    });
+
+    // Check if the input is dirty (value changed)
+    setIsDirty(initialState[input.name] !== input.value);
+
+    // Check the overall form validity
+    setIsValid(input.form.checkValidity());
   };
 
-  // Handler for form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(form);
-  };
-
-  // Function to set initial form state
-  const setInitialState = (initialState) => {
-    setForm(initialState);
+  // Function to reset form values, errors, dirty status, and validity
+  const reset = (values) => {
+    setForm(values);
     setErrors({});
+    setIsDirty(false);
     setIsValid(true);
   };
 
-  // Exposing form state and handlers
-  return { form, errors, isValid, handleChange, handleSubmit, setInitialState };
+  // Return the form-related functions and state
+  return {
+    form,
+    errors,
+    isDirty,
+    isValid,
+    handleChange,
+    reset,
+  };
 };
 
 export default useForm;
