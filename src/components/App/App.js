@@ -94,9 +94,9 @@ function App() {
       api
         .getAllInitialData(token)
         .then((data) => {
-          const [user, movies] = data;
-          setCurrentUser(user);
-          setSavedMovies(movies.filter((i) => i.owner === user._id));
+          const [userInfo, movies] = data;
+          setCurrentUser(userInfo);
+          setSavedMovies(movies.filter((i) => i.owner._id === userInfo._id));
           setMoviesState({
             ...moviesState,
             isShortChecked: false,
