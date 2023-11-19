@@ -46,8 +46,13 @@ function Movies() {
     errorMessage,
   } = moviesState;
 
-  const { number, limit } = paramRef.current;
+  const { number, limit } = paramRef;
   const [numberOfCard, setNumberOfCard] = useState(number);
+
+  useEffect(() => {
+    setNumberOfCard(number);
+    window.scroll({top: 0, behavior:'instant'});
+  }, [paramRef]);
 
   function onMoreClick() {
     setNumberOfCard((state) => state + limit);

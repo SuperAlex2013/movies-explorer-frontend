@@ -6,7 +6,7 @@ import { AppContext } from 'contexts/AppContext';
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useContext(AppContext);
 
-  return isLoggedIn ? children : <Navigate to="/signin" replace />;
+  return isLoggedIn ? children : <Navigate to="/" replace />;
 }
 
 export default ProtectedRoute;

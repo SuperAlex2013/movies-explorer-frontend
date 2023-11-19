@@ -5,17 +5,22 @@ import { SMALL, MIDDLE, LARGE_PARAMS, MIDDLE_PARAMS, SMALL_PARAMS } from 'utils/
 const useScreenSize = () => {
   const { width } = useWindowSize();
   const [isLargeDevice, setIsLargeDevice] = useState(false);
-  const paramRef = useRef({});
+  const [paramRef, setParamRef] = useState(MIDDLE_PARAMS);
 
   useEffect(() => {
     setIsLargeDevice(width > SMALL + 1);
+    let newValue = null;
 
     if (width > MIDDLE) {
-      paramRef.current = LARGE_PARAMS;
+      newValue = LARGE_PARAMS;
     } else if (width > SMALL) {
-      paramRef.current = MIDDLE_PARAMS;
+      newValue = MIDDLE_PARAMS;
     } else {
-      paramRef.current = SMALL_PARAMS;
+      newValue = SMALL_PARAMS;
+    }
+
+    if (newValue.number !== paramRef.number || newValue.limit !== paramRef.limit) {
+      setParamRef(newValue);
     }
   }, [width]);
 

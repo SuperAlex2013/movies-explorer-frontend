@@ -17,6 +17,10 @@
   justify-content: center;
   gap: 10px;
 }
+.form__profile-submit[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .form__submit {
   color: #fff;
