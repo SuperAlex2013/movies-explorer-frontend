@@ -1,64 +1,76 @@
-.checkbox {
-  width: 34px;
-  height: 20px;
+:root {
+  --slider-bg: #343434;
+  --slider-bg-active: #2be080;
+  --slider-knob-bg: #a0a0a0;
+  --slider-knob-bg-active: #fff;
+  --slider-focus-outline-color: #a0a0a0;
+}
+
+.slider__container {
   display: inline-block;
   position: relative;
+  width: 34px;
+  height: 20px;
 }
 
-.checkbox__input {
+.slider__input {
+  opacity: 0;
+  position: absolute;
   width: 0;
   height: 0;
-  position: absolute;
-  opacity: 0;
 }
 
-.checkbox__slider {
+.slider__track {
   cursor: pointer;
   position: absolute;
   top: 3px;
   left: 0;
 }
 
-.checkbox__slider:before {
+.slider__track::before, .slider__track::after {
   content: "";
-  width: 34px;
-  height: 14px;
   display: block;
   position: absolute;
-  left: 0;
-  top: 0;
-  border-radius: 7px;
-  background-color: #343434;
 }
 
-.checkbox__slider::after {
-  content: "";
+.slider__track::before {
+  background-color: var(--slider-bg);
+  border-radius: 7px;
+  width: 34px;
+  height: 14px;
+  left: 0;
+  top: 0;
+}
+
+.slider__track::after {
+  background-color: var(--slider-knob-bg);
+  border-radius: 5px;
   width: 10px;
   height: 10px;
-  display: block;
-  border-radius: 5px;
-  background-color: #8b8b8b; 
-  position: absolute;
   left: 2px;
   top: 2px;
 }
 
-.checkbox__input:checked + .checkbox__slider::before {
-  background-color: #3ddc84;
+.slider__input:checked + .slider__track::before {
+  background-color: var(--slider-bg-active);
 }
 
-.checkbox__input:checked + .checkbox__slider::after {
-  background-color: #fff;
+.slider__input:checked + .slider__track::after {
+  background-color: var(--slider-knob-bg-active);
   left: 22px;
 }
 
-.checkbox__input:focus-visible + .checkbox__slider::before {
-  outline: 1px solid #8b8b8b;
+.slider__input:focus-visible + .slider__track::before {
+  outline: 1px solid var(--slider-focus-outline-color);
   outline-offset: 2px;
 }
 
+.slider__input:disabled + .slider__track {
+  opacity: .7;
+}
+
 @media screen and (hover: hover) {
-  .checkbox:hover {
+  .slider__input:hover + .slider__track {
     opacity: .7;
   }
 }

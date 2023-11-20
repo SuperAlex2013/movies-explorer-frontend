@@ -2,25 +2,28 @@ import { useEffect } from 'react';
 
 const useMenuClose = (isOpen, closePopup) => {
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
-    const handleEscapeKeyPress = (e) => {
-      if (e.key === 'Escape') closePopup();
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        closePopup();
+      }
     };
 
-
-    const handleMouseDownOutsideMenu = (e) => {
-      if (e.target.classList.contains('navigation__is-opened')) closePopup();
+    const handleOverlay = (e) => {
+      if (e.target.classList.contains('navigation__is-opened')) {
+        closePopup();
+      }
     };
 
-    // Register event listeners
-    document.addEventListener('keydown', handleEscapeKeyPress);
-    document.addEventListener('mousedown', handleMouseDownOutsideMenu);
+    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('mousedown', handleOverlay);
 
-    // Cleanup event listeners on unmount or when isOpen changes
     return () => {
-      document.removeEventListener('keydown', handleEscapeKeyPress);
-      document.removeEventListener('mousedown', handleMouseDownOutsideMenu);
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('mousedown', handleOverlay);
     };
   }, [isOpen, closePopup]);
 };

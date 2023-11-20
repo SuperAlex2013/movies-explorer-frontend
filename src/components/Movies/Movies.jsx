@@ -1,53 +1,112 @@
-import { useState, useContext, useEffect } from 'react';
-
+import React, { useState, useContext, useEffect } from 'react';
 import Preloader from 'components/Preloader/Preloader';
 import SearchForm from 'components/SearchForm/SearchForm';
 import MoviesCardList from 'components/MoviesCardList/MoviesCardList';
-import Tooltip from 'components/Tooltip/Tooltip';
+import MoreButton from 'components/MoreButton/MoreButton';
 import { AppContext } from 'contexts/AppContext';
-import { movies } from 'movies/constants';
-
-import MoreButton from '../MoreButton/MoreButton';
-
+import { filter } from 'utils/filter';
 import './Movies.css';
 
+function RenderSearchForm({
+  isShortChecked,
+  isShortDisabled,
+  searchValue,
+  isSubmitDisabled,
+  toggleShortCheck,
+  onSearchSubmit,
+}) {
+  return (
+    <SearchForm
+      isChecked={isShortChecked}
+      isCheckDisabled={isShortDisabled}
+      onCheck={toggleShortCheck}
+      searchValue={searchValue}
+      isSubmitDisabled={isSubmitDisabled}
+      onSubmit={onSearchSubmit}
+    />
+  );
+}
+
 function Movies() {
-  const { width, isLoading, isError } = useContext(AppContext);
-  const [limit, setLimit] = useState(0);
-  const [savedMovies, setSavedMovies] = useState([]);
+  const {
+    paramRef,
+    isLoading,
+    savedMovies,
+    movies,
+    moviesState,
+    setMoviesState,
+    setIsFirstSearch,
+  } = useContext(AppContext);
+
+  const {
+    searchValue,
+    isShortChecked,
+    isShortDisabled,
+    isSubmitDisabled,
+    errorMessage,
+  } = moviesState;
+
+  const { number, limit } = paramRef;
+  const [numberOfCard, setNumberOfCard] = useState(number);
 
   useEffect(() => {
-    if (width > 1279) {
-      setLimit(11);
-      setSavedMovies([{ movieId: 2 }, { movieId: 6 }]);
-    } else if (width > 767) {
-      setLimit(7);
-      setSavedMovies([{ movieId: 2 }, { movieId: 4 }]);
-    } else {
-      setLimit(5);
-      setSavedMovies([{ movieId: 1 }, { movieId: 4 }]);
-    }
-  }, [width]);
+    setNumberOfCard(number);
+    window.scroll({top: 0, behavior:'instant'});
+  }, [paramRef]);
+
+  function onMoreClick() {
+    setNumberOfCard((state) => state + limit);
+  }
+
+  function toggleShortCheck() {
+    setMoviesState((prevState) => ({
+      ...prevState,
+      isShortChecked: !prevState.isShortChecked,
+    }));
+  }
+
+  useEffect(() => {
+    onSearchSubmit(searchValue);
+  }, [isShortChecked, searchValue]);
+
+  function onSearchSubmit(value) {
+    setIsFirstSearch(true);
+    setMoviesState((prevState) => ({
+      ...prevState,
+      searchValue: value,
+    }));
+    setNumberOfCard(number);
+  }
+
+  const filteredItems = filter(
+    movies,
+    ['nameRU', 'nameEN'],
+    searchValue,
+    isShortChecked
+  );
 
   return (
     <main className="movies">
-      <SearchForm />
-      {isError ? (
-        <Tooltip>
-          <p className="tooltip__error-text" id="description">
-            <span className="tooltip__error-code">500</span> Abandon ship, server is mistaken.
-          </p>
-        </Tooltip>
-      ) : isLoading ? (
+      {RenderSearchForm({
+        isShortChecked,
+        isShortDisabled,
+        searchValue,
+        isSubmitDisabled,
+        toggleShortCheck,
+        onSearchSubmit,
+      })}
+      {isLoading ? (
         <Preloader />
       ) : (
         <>
           <MoviesCardList
-            movies={movies.filter((item, ind) => ind < limit)}
+            movies={filteredItems.slice(0, numberOfCard)}
             savedMovies={savedMovies}
-            id={'id'}
+            errorMessage={errorMessage}
           />
-          <MoreButton />
+          {filteredItems.length > numberOfCard && (
+            <MoreButton handleMoreClick={onMoreClick} />
+          )}
         </>
       )}
     </main>

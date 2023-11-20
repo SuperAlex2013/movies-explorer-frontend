@@ -1,3 +1,4 @@
+
 .profile {
   min-height: 482px;
   display: flex;
@@ -20,13 +21,15 @@
 
 .profile__logout {
   margin-top: 14px;
+  display: flex;
+  flex-direction: column;
 }
 
-.profile__logout-link {
-  color: #EE3465;
+.profile__logout-button {
+  color: #ee3465;
   font-size: 13px;
   font-weight: 500;
-  background: transparent;
+  background-color: #202020;
 }
 
 @media screen and (max-width: 1279px) {
@@ -56,7 +59,7 @@
     margin-top: 12px;
   }
 
-  .profile__logout-link {
+  .profile__logout-button {
     font-size: 12px;
   }
 }

@@ -1,37 +1,37 @@
 .login {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
 }
 
 .login__container {
-  width: 396px;
   display: flex;
   flex-direction: column;
+  width: 396px;
 }
 
-.login__header {
+.login__title {
   font-size: 24px;
-  font-weight: 500;
   line-height: 29px;
+  font-weight: 500;
   margin: 40px 0;
 }
 
 .login__link {
+  display: block;
   width: 38px;
   height: 38px;
-  display: block;
   border-radius: 19px;
   overflow: hidden;
 }
 
 .login__signup {
-  font-size: 14px;
-  line-height: 17px;
   display: flex;
   justify-content: center;
   gap: 7px;
+  font-size: 14px;
+  line-height: 17px;
   margin-top: 16px;
 }
 
@@ -46,22 +46,25 @@
 
 @media screen and (max-width: 768px) {
   .login__container {
-    width: calc(260px + 136 * ((100vw - 320px) / 448));
+    width: calc(260px + (396 - 260)*((100vw - 320px)/(768 - 320)));
     margin-top: 66px;
   }
 
-  .login__header {
-    margin-top: calc(50px + -10 * ((100vw - 320px) / 448));
-    margin-bottom: calc(80px + -40 * ((100vw - 320px) / 448));
+  .login__title {
+    margin-top: calc(50px + (40 - 50)*((100vw - 320px)/(768 - 320)));
+    margin-bottom: calc(80px + (40 - 80)*((100vw - 320px)/(768 - 320)));
   }
 }
 
 @media screen and (max-width: 320px) {
   .login {
+    display: flex;
     align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
   }
 
-  .login__header {
+  .login__title {
     margin: 50px 0 80px;
   }
 

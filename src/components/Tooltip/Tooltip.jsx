@@ -1,16 +1,40 @@
-import { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import './Tooltip.css';
+
+import { useLocation } from 'react-router-dom';
 import { AppContext } from 'contexts/AppContext';
-import './Tooltip.css'; // Ensure this path matches your project structure
+import { MESSAGES } from 'utils/constants';
 
-function Tooltip({ children }) {
-  const { isError } = useContext(AppContext);
+function Tooltip() {
+  const { pathname } = useLocation();
+  const { state, status, setState } = useContext(AppContext);
 
-  // Determine the class name based on the isError value
-  const tooltipClassName = isError ? 'tooltip-container tooltip-visible' : 'tooltip';
+  const renderTooltipText = () => {
+    return (
+      <>
+        {pathname === '/movies' && (
+          <span className="tooltip__error-status">{status}</span>
+        )}
+        {MESSAGES[pathname][status]}
+      </>
+    );
+  };
+
+  const getTooltipClassName = () => {
+    return state !== 'idle' ? 'tooltip tooltip_visible' : 'tooltip';
+  };
+
+  useEffect(() => {
+    if (state !== 'idle') setState('idle');
+
+    // eslint-disable-next-line
+  }, [pathname]);
 
   return (
-    <div className={tooltipClassName}>
-      {children}
+    <div className={getTooltipClassName()}>
+      <p className={`tooltip__text tooltip__${state}-text`} id="description">
+        {renderTooltipText()}
+      </p>
     </div>
   );
 }
